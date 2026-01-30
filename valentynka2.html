@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -194,3 +195,201 @@ function typeLine() {
 typeLine();
 </script>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro tebe, má princezno</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Playfair Display', 'Segoe UI', Arial, serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url('pozadi.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(120deg, #ffb6b9cc 0%, #ffe4e1cc 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        .container {
+            background: rgba(255,255,255,0.92);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px rgba(220, 20, 60, 0.10);
+            padding: 2.5rem 2rem 2rem 2rem;
+            max-width: 420px;
+            width: 94vw;
+            text-align: center;
+        }
+        h1 {
+            color: #c9184a;
+            font-size: 2.1rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Playfair Display', serif;
+        }
+        .romantic {
+            color: #6a1b3a;
+            font-size: 1.18rem;
+            margin-bottom: 2.2rem;
+            font-family: 'Playfair Display', serif;
+        }
+        .img-wrap {
+            margin: 1.5rem 0 0.5rem 0;
+            position: relative;
+            display: inline-block;
+            border-radius: 24px;
+            padding: 7px;
+            background: linear-gradient(135deg, #ffb6b9 0%, #fff0f5 60%, #ff4d6d 100%);
+            box-shadow: 0 4px 32px 0 #ffb6b999, 0 1.5px 8px #ff4d6d55;
+            border: 2.5px solid #fff0f5;
+            transition: box-shadow 0.3s, border 0.3s;
+        }
+        .img-wrap:hover {
+            box-shadow: 0 8px 48px 0 #ff4d6dcc, 0 2px 12px #ffb6b9aa;
+            border: 2.5px solid #ff4d6d;
+        }
+        .img-wrap img {
+            max-width: 100%;
+            width: 220px;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px #ffb6b9;
+            height: auto;
+            position: relative;
+            z-index: 3;
+        }
+        .signature {
+            margin-top: 2.2rem;
+            color: #b5838d;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+                max-width: 99vw;
+            }
+            h1 { font-size: 1.3rem; }
+            .romantic { font-size: 1rem; }
+            .img-wrap img { width: 90vw; max-width: 99vw; }
+        }
+        .falling-heart {
+            position: fixed;
+            top: -48px;
+            pointer-events: none;
+            z-index: 2;
+            font-size: 2rem;
+            opacity: 0.45;
+            animation: fallHeart 7s linear forwards;
+            user-select: none;
+        }
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            width: 32px;
+            height: 32px;
+            opacity: 0.95;
+            filter: blur(0.5px) drop-shadow(0 0 6px #fff8dc);
+            animation: sparkleAnim 1.5s linear forwards;
+        }
+        @keyframes sparkleAnim {
+            0% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+            30% { opacity: 1; transform: scale(1.2) rotate(20deg); }
+            70% { opacity: 1; transform: scale(1) rotate(-20deg); }
+            100% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+        }
+        @keyframes fallHeart {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.45; }
+            80% { opacity: 0.45; }
+            100% { transform: translateY(110vh) rotate(360deg) scale(0.8); opacity: 0; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Pro tebe, má princezno</h1>
+        <div class="romantic" id="romanticText">
+            <!-- Text will be typed here -->
+        </div>
+        <div class="img-wrap">
+            <img src="psíkvalentyn.jpg" alt="Valentýnský pejsek">
+        </div>
+        <div class="signature">Tvůj miláček</div>
+    </div>
+    <script>
+        // Elegant falling Unicode hearts
+        const heartColors = ['#ff4d6d', '#ffb6c1', '#fff0f6', '#e63946'];
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random()*100 + 'vw';
+            heart.style.transform = `rotate(${Math.random()*360}deg)`;
+            heart.style.color = heartColors[Math.floor(Math.random()*heartColors.length)];
+            heart.style.fontSize = (1.3 + Math.random()*1.7) + 'rem';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 7500);
+        }
+        setInterval(createFallingHeart, 600);
+        for(let i=0;i<12;i++) setTimeout(createFallingHeart, i*300);
+        // Sparkle (jiskřičky) effect
+        const sparkleSVG = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#glow)"><path d="M16 2l2.5 9L30 14l-9 2.5L16 30l-2.5-13.5L2 14l11.5-3L16 2z" fill="#fffbe6" stroke="#ffe066" stroke-width="1.2"/></g><defs><filter id="glow" x="-10" y="-10" width="52" height="52" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>`;
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.innerHTML = sparkleSVG;
+            sparkle.style.left = (Math.random()*100) + 'vw';
+            sparkle.style.top = (Math.random()*100) + 'vh';
+            sparkle.style.opacity = (0.7 + Math.random()*0.3).toFixed(2);
+            sparkle.style.transform += ` scale(${0.8 + Math.random()*0.8})`;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1500);
+        }
+        setInterval(createSparkle, 400);
+        for(let i=0;i<16;i++) setTimeout(createSparkle, i*120);
+        // ...existing code...
+    </script>
+</body>
+<script>
+// Typewriter effect for romantic message
+const text = [
+    "Každý den s tebou je ten nejkrásnější dárek.",
+    "Děkuji, že tě můžu mít ve svém životě.",
+    "Miluji tě víc, než dokážu vyjádřit slovy."
+];
+const target = document.getElementById('romanticText');
+let line = 0, char = 0;
+function typeLine() {
+    if (line < text.length) {
+        if (char < text[line].length) {
+            target.innerHTML = text.slice(0, line).map(l=>l+"<br>").join("") + text[line].slice(0, char+1);
+            char++;
+            setTimeout(typeLine, 15);
+        } else {
+            target.innerHTML = text.slice(0, line+1).map(l=>l+"<br>").join("");
+            line++;
+            char = 0;
+            setTimeout(typeLine, 350);
+        }
+    }
+}
+typeLine();
+</script>
+</html>
+>>>>>>> 202ec8ad2116401c1752a065e2d7e412145ac5b3
