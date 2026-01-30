@@ -3,12 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentýnka pro Viky</title>
-    <script>
-        window.location.href = 'valentyn-viky.html';
-    </script>
+    <title>Budeš moje Valentýnka, Viky?</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Playfair Display', 'Segoe UI', Arial, serif;
+            background: linear-gradient(120deg, #7b1125 0%, #2d0612 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .bg-anim {
+            position: fixed;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bokeh {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.18;
+            background: #fff;
+            filter: blur(2px);
+            animation: bokehMove 18s linear infinite;
+        }
+        @keyframes bokehMove {
+            0% { transform: translateY(0) scale(1); opacity: 0.18; }
+            80% { opacity: 0.18; }
+            100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+        }
+        .floating-heart-bg {
+            position: absolute;
+            font-size: 2.2rem;
+            opacity: 0.13;
+            animation: floatHeartBg 16s linear infinite;
+            will-change: transform, opacity;
+            pointer-events: none;
+        }
+        @keyframes floatHeartBg {
+            0% { transform: translateY(0) scale(1); opacity: 0.13; }
+            80% { opacity: 0.13; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+        .main-title {
+            color: #fff;
+            font-size: 2.7rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            text-shadow: 0 4px 32px #000, 0 1px 0 #c9184a;
+            margin-bottom: 1.2rem;
+            margin-top: 0;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #ffd6e0;
+            font-size: 1.25rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 2.2rem;
+            text-align: center;
+            text-shadow: 0 2px 8px #7b1125;
+        }
+        .btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            max-width: 90vw;
+        }
+        .btn {
+            background: linear-gradient(90deg, #c9184a 0%, #ffb6b9 100%);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 1.1rem 3.2rem;
+            font-size: 1.4rem;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(201,24,74,0.18);
+            transition: background 0.2s, transform 0.2s, font-size 0.2s, padding 0.2s;
+            min-width: 120px;
+            max-width: 90vw;
+            word-break: break-word;
+        }
+        .btn:active {
+            filter: brightness(0.95);
+        }
+        .btn-yes {
+            z-index: 2;
+        }
+        .btn-no {
+            z-index: 2;
+        }
+        .answer {
+            margin-top: 2.7rem;
+            font-size: 1.5rem;
+            color: #fff;
+            min-height: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            text-shadow: 0 2px 8px #c9184a;
+        }
+        .wish {
+            opacity: 0;
+            color: #fff;
+            font-size: 2.1rem;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            margin-top: 2.5rem;
+            text-shadow: 0 2px 16px #c9184a;
+            transition: opacity 1.2s;
+            pointer-events: none;
+        }
+        .wish.visible {
+            opacity: 1;
+        }
+        .signature {
+            color: #ffd6e0;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            opacity: 0.85;
+            text-align: center;
+            margin-top: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .corner-signature {
+            position: fixed;
+            right: 2vw;
+            bottom: 1.5vh;
+            color: #ffd6e0;
+            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+            opacity: 0.7;
+            z-index: 10;
+            pointer-events: none;
+        }
+        @media (max-width: 600px) {
+            .main-title { font-size: 1.5rem; }
+            .btn { font-size: 1.1rem; padding: 0.7rem 1.5rem; }
+            .wish { font-size: 1.2rem; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p>Přesměrování...</p>
+    <div class="bg-anim" id="bg-anim"></div>
+    <h1 class="main-title">Budeš moje Valentýnka, Viky?</h1>
+    
+    <div class="btns">
+        <button class="btn btn-yes" id="yesBtn">Ano ❤️</button>
+        <button class="btn btn-no" id="noBtn">Ne 😢</button>
+    </div>
+    <div class="answer" id="answer"></div>
+    <div class="wish" id="wish">Krásného Valentýna, zlatí! 💖</div>
+    <div class="corner-signature">tvůj miláček</div>
+    <script>
+        // --- Animated bokeh and floating hearts background ---
+        const bg = document.getElementById('bg-anim');
+        function randomBokeh() {
+            const b = document.createElement('div');
+            b.className = 'bokeh';
+            const size = 60 + Math.random()*90;
+            b.style.width = b.style.height = size + 'px';
+            b.style.left = Math.random()*100 + 'vw';
+            b.style.bottom = '-5rem';
+            b.style.background = [
+                'rgba(255,255,255,0.18)',
+                'rgba(255,182,193,0.18)',
+                'rgba(255, 77, 109, 0.13)',
+                'rgba(255,214,224,0.16)'
+            ][Math.floor(Math.random()*4)];
+            b.style.animationDuration = (12 + Math.random()*10) + 's';
+            bg.appendChild(b);
+            setTimeout(() => b.remove(), 22000);
+        }
+        setInterval(randomBokeh, 900);
+        for(let i=0;i<10;i++) setTimeout(randomBokeh, i*600);
+
+        function randomBgHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart-bg';
+            heart.textContent = ['❤','💕','💖','💗','💞'][Math.floor(Math.random()*5)];
+            heart.style.left = Math.random()*100 + 'vw';
+            heart.style.bottom = '-3rem';
+            heart.style.fontSize = (1.5 + Math.random()*2.5) + 'rem';
+            heart.style.color = ['#fff','#ffb6b9','#ff4d6d','#c9184a','#ffd6e0'][Math.floor(Math.random()*5)];
+            heart.style.animationDuration = (10 + Math.random()*10) + 's';
+            bg.appendChild(heart);
+            setTimeout(() => heart.remove(), 20000);
+        }
+        setInterval(randomBgHeart, 1200);
+        for(let i=0;i<8;i++) setTimeout(randomBgHeart, i*800);
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const answerDiv = document.getElementById('answer');
+        const noAnswers = [
+            "Opravdu ne, Viky?",
+            "Prosím? 🥺",
+            "Přinesu ti čokoládu! 🍫",
+            "Nemáš na výběr! ❤️"
+        ];
+        const yesAnswer = "juj 🥰🥰🥰 děkuji";
+        let noClick = 0;
+        noBtn.addEventListener('click', () => {
+            noClick++;
+            // Shrink No, grow Yes, but keep reasonable size
+            let noScale = Math.max(0.2, 1 - 0.22 * noClick);
+            let yesScale = Math.min(1.5, 1 + 0.12 * noClick);
+            noBtn.style.transform = `scale(${noScale})`;
+            yesBtn.style.transform = `scale(${yesScale})`;
+            // Show answer only
+            if (noClick < noAnswers.length) {
+                answerDiv.textContent = noAnswers[noClick - 1];
+            } else {
+                answerDiv.textContent = noAnswers[noAnswers.length - 1];
+                noBtn.style.display = 'none';
+            }
+            // Always keep button texts the same
+            noBtn.textContent = 'Ne 😢';
+            yesBtn.textContent = 'Ano ❤️';
+        });
+        // Heart burst animation
+        function burstHearts(x, y) {
+            for (let i = 0; i < 32; i++) {
+                const heart = document.createElement('div');
+                heart.textContent = ['❤','💕','💖','💗','💞'][Math.floor(Math.random()*5)];
+                heart.style.position = 'fixed';
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+                heart.style.fontSize = (18 + Math.random()*32) + 'px';
+                heart.style.color = ['#ffb6b9','#ff4d6d','#c9184a','#fff','#ffb6c1'][Math.floor(Math.random()*5)];
+                heart.style.opacity = '0.85';
+                heart.style.pointerEvents = 'none';
+                heart.style.zIndex = 9999;
+                document.body.appendChild(heart);
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = 80 + Math.random() * 120;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                setTimeout(() => {
+                    heart.style.transition = 'transform 1.2s cubic-bezier(.2,1.5,.5,1), opacity 1.2s';
+                    heart.style.transform = `translate(${dx}px, ${dy}px) scale(${0.7 + Math.random()*1.2})`;
+                    heart.style.opacity = '0';
+                }, 10);
+                setTimeout(() => heart.remove(), 1400);
+            }
+        }
+
+        // Fade-in wish
+        const wish = document.getElementById('wish');
+
+        // Big heart animation
+        function showBigHeart() {
+            const bigHeart = document.createElement('div');
+            bigHeart.textContent = '❤';
+            bigHeart.style.position = 'fixed';
+            bigHeart.style.left = '50%';
+            bigHeart.style.top = '50%';
+            bigHeart.style.transform = 'translate(-50%, -50%) scale(0.2)';
+            bigHeart.style.fontSize = '10rem';
+            bigHeart.style.color = '#ff4d6d';
+            bigHeart.style.opacity = '0.85';
+            bigHeart.style.zIndex = '99999';
+            bigHeart.style.pointerEvents = 'none';
+            bigHeart.style.transition = 'transform 1.2s cubic-bezier(.2,1.5,.5,1), opacity 1.2s';
+            document.body.appendChild(bigHeart);
+            setTimeout(() => {
+                bigHeart.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                bigHeart.style.opacity = '1';
+            }, 10);
+            setTimeout(() => {
+                bigHeart.style.opacity = '0';
+            }, 1200);
+            setTimeout(() => bigHeart.remove(), 1800);
+        }
+
+        yesBtn.addEventListener('click', (e) => {
+            answerDiv.textContent = yesAnswer;
+            yesBtn.style.transform = 'scale(1.2)';
+            noBtn.style.transform = 'scale(0.9)';
+            // Always keep button texts the same
+            noBtn.textContent = 'Ne 😢';
+            yesBtn.textContent = 'Ano ❤️';
+            // Burst hearts animation from button center
+            const rect = yesBtn.getBoundingClientRect();
+            const x = rect.left + rect.width/2;
+            const y = rect.top + rect.height/2;
+            burstHearts(x, y);
+            // Show wish
+            wish.classList.add('visible');
+            // Show big heart
+            showBigHeart();
+            // Redirect after animation
+            setTimeout(() => {
+                window.location.href = 'valentynka2.html';
+            }, 2200);
+        });
+    </script>
 </body>
 </html>
